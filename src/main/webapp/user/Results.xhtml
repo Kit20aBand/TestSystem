@@ -1,0 +1,98 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="title">Результаты</ui:define>
+	<ui:define name="content">
+		<p:notificationBar position="top" effect="slide" widgetVar="testBar"
+			autoDisplay="true" style="height: 150px" styleClass="top">
+
+			<h:outputText value="Количество вопросов: "
+				style="color:#FFCC00;font-size:36px;" />
+			<h:outputLabel value="#{submitController.countOfQuestions}"
+				style="color:#FFCC00;font-size:36px;" />
+			<br />
+
+			<h:outputText value="Количество правильных ответов: "
+				style="color:#FFCC00;font-size:36px;" />
+			<h:outputLabel value="#{submitController.score}"
+				style="color:#FFCC00;font-size:36px;" />
+			<br />
+
+			<h:outputFormat value="Ваш результат: {0}%"
+				style="color:#FFCC00;font-size:36px;">
+				<f:param value="#{submitController.scoreInPercent}"></f:param>
+			</h:outputFormat>
+			<br />
+
+			<h:form>
+				<div align="center">
+					<p:commandButton value="Пройти тест еще раз"
+						action="User_home?faces-redirect=true" />
+					<p:commandButton value="Скрыть" onclick="PF('testBar').hide()" />
+				</div>
+			</h:form>
+		</p:notificationBar>
+		<h:form id="form">
+			<p:dataList id="dataTable" lazy="true" rowIndexVar="index" emptyMessage="В тестовом режиме вы не можете просматривать правильные ответы."
+				value="#{showResultToUserController.questionsReport}" var="question"
+				paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="1,5,10,15,50">
+				<f:facet name="header">  
+                		Вопросы
+           			</f:facet>
+				<div>
+					<h:outputLabel value="#{index + 1}." style="font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 11pt;"/>
+					<h:outputLabel value="#{question.question}" escape="false"
+						style="font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 11pt; text-align: left; " />
+
+					<p:selectManyCheckbox value="#{question.variants}" 
+						style="font-family: Verdana, Arial, Helvetica, sans-serif; position: relative; top: 0.4em;"
+						layout="pageDirection">
+						<f:selectItems value="#{question.variants}" />
+					</p:selectManyCheckbox>
+				</div>
+				<div>
+					<h:outputText value="Правильные ответы:"
+						style="position: relative; top: 0.6em; font-family: Verdana, Arial, Helvetica, sans-serif; font-size:16px; text-align: left" />
+
+					<p:selectManyCheckbox value="#{question.correctAnswers}"
+						style="position: relative; top: 1.2em;" layout="pageDirection">
+						<f:selectItems value="#{question.correctAnswers}"
+							itemDisabled="true" />
+					</p:selectManyCheckbox>
+				</div>
+
+				<h:outputText value="Ваши ответы:"
+					style="position: relative; top: 1.2em; font-family: Verdana, Arial, Helvetica, sans-serif; font-size:16px; text-align: left" />
+
+				<h:panelGrid columns="2">
+
+					<p:selectManyCheckbox value="#{question.userAnswers}"
+						style="position: relative; top:1.6em; " layout="pageDirection">
+						<f:selectItems value="#{question.userAnswers}" />
+					</p:selectManyCheckbox>
+
+					<h:graphicImage name="images/wrong.png"
+						style="position: relative; top:1.7em;"
+						rendered="#{!question.correct}" />
+					<h:graphicImage name="images/correct.png"
+						style="position: relative; top:1.7em; "
+						rendered="#{question.correct}" />
+				</h:panelGrid>
+				<p:separator id="separator" style="position: relative; top:1.7em; margin-bottom:1.7em" />
+				<br />
+
+				<f:facet name="footer">
+					<p:commandButton value="Показать результат"
+						onclick="PF('testBar').show()" />
+				</f:facet>
+			</p:dataList>
+		</h:form>
+	</ui:define>
+</ui:composition>

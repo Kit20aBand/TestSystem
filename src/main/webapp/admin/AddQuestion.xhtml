@@ -1,0 +1,80 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="title">Добавить вопрос</ui:define>
+	<ui:define name="content">
+		<h:form id="form">
+			<p:growl id="growl" showDetail="true" />
+			<p:panel header="Введите вопрос:">
+				<p:editor id="editor" required="true"
+					requiredMessage="Пожалуйста, введите вопрос!"
+					value="#{createQuestionController.questionText}" />
+			</p:panel>
+
+			<p:panel header="Варианты ответа:">
+				<f:event listener="#{createQuestionController.validator.validate}"
+					type="postValidate" />
+				<h:panelGrid columns="2" width="100%" >
+
+					<p:inputTextarea rows="5" cols="100"  style="width: 100%;" id="variant0" 
+						value="#{createQuestionController.variants[0]}" />
+					<p:selectBooleanButton id="answer0"
+						style="width: 150px; height: 75px; margin: 15px; "
+						value="#{createQuestionController.answers[0]}" onLabel="Правильно"
+						offLabel="Неправильно"></p:selectBooleanButton>
+
+
+					<p:inputTextarea rows="5" cols="100" style="width: 100%;" id="variant1"
+						value="#{createQuestionController.variants[1]}" />
+					<p:selectBooleanButton id="answer1"
+						style="width: 150px; height: 75px;margin: 15px;"
+						value="#{createQuestionController.answers[1]}" onLabel="Правильно"
+						offLabel="Неправильно"></p:selectBooleanButton>
+
+
+					<p:inputTextarea rows="5" cols="100" style="width: 100%;" id="variant2" 
+						value="#{createQuestionController.variants[2]}" />
+					<p:selectBooleanButton id="answer2"
+						style="width: 150px; height: 75px; margin: 15px;"
+						value="#{createQuestionController.answers[2]}" onLabel="Правильно"
+						offLabel="Неправильно"></p:selectBooleanButton>
+
+
+					<p:inputTextarea rows="5" cols="100" style="width: 100%;" id="variant3"
+						value="#{createQuestionController.variants[3]}" />
+					<p:selectBooleanButton id="answer3"
+						style="width: 150px; height: 75px; margin: 15px;"
+						value="#{createQuestionController.answers[3]}" onLabel="Правильно"
+						offLabel="Неправильно"></p:selectBooleanButton>
+
+					<p:inputTextarea rows="5" cols="100" style="width: 100%;" id="variant4"
+						value="#{createQuestionController.variants[4]}" />
+					<p:selectBooleanButton id="answer4"
+						style="width: 150px; height: 75px; margin: 15px;"
+						value="#{createQuestionController.answers[4]}" onLabel="Правильно"
+						offLabel="Неправильно"></p:selectBooleanButton>
+
+					<p:inputTextarea rows="5" cols="100" style="width: 100%;" id="variant5"
+						value="#{createQuestionController.variants[5]}" />
+					<p:selectBooleanButton id="answer5"
+						style="width: 150px; height: 75px; margin: 15px;"
+						value="#{createQuestionController.answers[5]}" onLabel="Правильно"
+						offLabel="Неправильно"></p:selectBooleanButton>
+				</h:panelGrid>
+
+				<f:facet name="footer">
+					<div align="center">
+						<p:commandButton update="growl, :questionsCount" value="Добавить" 
+							actionListener="#{createQuestionController.addQuestion()}"
+							icon="ui-icon-disk" />
+					</div>
+				</f:facet>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

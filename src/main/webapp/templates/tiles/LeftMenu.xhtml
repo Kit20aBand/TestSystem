@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>Title</title>
+</h:head>
+<h:body>
+	<h:form>
+		<p:growl id="messages" />
+		<p:menu style="width:95%">
+			<c:if test="#{request.isUserInRole('Administrator')}">
+				<p:menuitem value="#{msgs.Home}"
+					action="/admin/Admin_home.xhtml?faces-redirect=true" ajax="false"
+					icon="ui-icon-home" />
+				<p:menuitem value="#{msgs.Students}"
+					action="/admin/Student_list.xhtml?faces-redirect=true" ajax="false"
+					icon="ui-icon-person" />
+				<p:menuitem value="#{msgs.Tests}"
+					action="/admin/Test_list.xhtml?faces-redirect=true" ajax="false"
+					icon=".ui-icon-plus" />
+				<p:menuitem value="#{msgs.Questions}"
+					action="/admin/Questions.xhtml?faces-redirect=true" ajax="false"
+					icon=".ui-icon-plus" />
+				<p:menuitem value="#{msgs.Results}"
+					action="/admin/Results.xhtml?faces-redirect=true" ajax="false"
+					icon="ui-icon-star" />
+			</c:if>
+		
+			<c:if test="#{request.getUserPrincipal() == null}">
+				<p:menuitem value="#{msgs.Login}"
+					action="/Login.xhtml?faces-redirect=true" icon="ui-icon-power" />
+			</c:if>
+			<c:if test="#{request.getUserPrincipal() != null}">
+				<p:menuitem value="#{msgs.Logout}"
+					action="#{loginController.logout}" icon="ui-icon-power" />
+			</c:if>
+		</p:menu>
+
+		<p:separator id="customSeparator" />
+<!--  
+		<p:panelMenu>
+			<p:submenu label="#{msgs.Theory}">
+				<p:menuitem value="#{msgs.Introduction}"
+					url="/pages/theory/Introduction.xhtml" />
+				<p:menuitem value="#{msgs.Sound}" url="/pages/theory/Sound.xhtml" />
+				<p:menuitem value="#{msgs.Notation_of}"
+					url="/pages/theory/Notation_of.xhtml" />
+			</p:submenu>
+			<p:submenu label="#{msgs.Harmony}">
+				<p:menuitem value="#{msgs.Harmony_in_music}"
+					url="/pages/harmony/Harmony_in_music.xhtml" />
+			</p:submenu>
+
+		</p:panelMenu>
+-->
+	</h:form>
+</h:body>
+</html>

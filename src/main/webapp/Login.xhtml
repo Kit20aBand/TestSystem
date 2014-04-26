@@ -1,0 +1,59 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="title">Вход в систему</ui:define>
+	<ui:define name="content">
+	
+		<p:notificationBar position="top" effect="slide" widgetVar="testBar"
+			style="height: 100px" styleClass="top">
+			<h:form>
+				<div align="center">
+					<h:outputText
+						style="color:#FFCC00;font-size:36px; "
+						value="Введите свой email: "></h:outputText>
+					<p:inputText value="#{loginController.email}"
+						style=" margin-bottom: 20px; position: relative; bottom: 0.3em;" />
+					<br/>
+					<p:commandButton value="Отправить данные для входа" actionListener="#{loginController.sendForgottenData}" style="margin-right: 10px"
+					update=":msgs"></p:commandButton>
+					<p:commandButton value="Скрыть" onclick="PF('testBar').hide()" style="position: relative; left: 0.6em;"/>
+				</div>
+			</h:form>
+		</p:notificationBar>
+		<h:form styleClass="loginPanelStyle">
+			
+			<p:panelGrid columns="2">
+				<f:facet name="header">
+                    Войдите в систему
+                </f:facet>
+				<h:outputText value="Ник : "></h:outputText>
+				<p:inputText id="username" value="#{loginController.username}"
+					required="true" requiredMessage="Введите ник!" message="fc">
+					<f:validateLength minimum="1" />
+				</p:inputText>
+				<h:outputText value="Пароль : "></h:outputText>
+				<p:password id="password" value="#{loginController.password}"
+					required="true" requiredMessage="Введите пароль!">
+					<f:validateLength minimum="1" />
+				</p:password>
+
+
+
+
+				<f:facet name="footer">
+					<p:commandButton value="Войти" update=":msgs" 
+						actionListener="#{loginController.login}" type="submit"
+						icon="ui-icon-check" style="margin:0"></p:commandButton>
+
+					<p:commandButton onstart="" value="Забыли пароль?" style="margin-left:35px"
+						onclick="PF('testBar').show()" />
+
+				</f:facet>
+			</p:panelGrid>
+		</h:form>
+		<p:growl id="msgs" showDetail="true" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,133 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="title">Результаты</ui:define>
+	<ui:define name="content">
+		<h:form id="form">
+			<p:dataTable id="dataTable" var="result"
+				value="#{showResultToAdminController.resultDataModel}"
+				paginator="true" rows="10" styleClass="userDataTableStyle"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,15,50"
+				selection="#{showResultToAdminController.selectedResults}"
+				filteredValue="#{showResultToAdminController.filteredResults}"
+				resizableColumns="true"
+				emptyMessage="Никто из студентов еще не проходил ни одного теста.">
+				<f:facet name="header">  
+            		Результаты студентов
+        		</f:facet>
+
+				<p:column selectionMode="multiple" style="width:4%" />
+
+				<p:column sortBy="user.username"
+					filterBy="user.username" id="username">
+					<f:facet name="header">
+						<h:outputText value="Ник" />
+					</f:facet>
+					<h:outputText value="#{result.user.username}" />
+				</p:column>
+
+				<p:column sortBy="user.firstname"
+					filterBy="user.firstname" id="firstname">
+					<f:facet name="header">
+						<h:outputText value="Имя" />
+					</f:facet>
+					<h:outputText value="#{result.user.firstname}" />
+				</p:column>
+
+				<p:column sortBy="user.lastname"
+					filterBy="user.lastname" id="lastname">
+					<f:facet name="header">
+						<h:outputText value="Фамилия" />
+					</f:facet>
+					<h:outputText value="#{result.user.lastname}" />
+				</p:column>
+
+				<p:column 
+					sortBy="user.studyPlace.educationInstitution"
+					filterBy="user.studyPlace.educationInstitution"
+					id="educationInstitution" exportable="false">
+					<f:facet name="header">
+						<h:outputText value="ВУЗ" />
+					</f:facet>
+					<h:outputText
+						value="#{result.user.studyPlace.educationInstitution}" />
+				</p:column>
+
+				<p:column sortBy="user.studyPlace.course"
+					filterBy="user.studyPlace.course" id="course" exportable="false">
+					<f:facet name="header">
+						<h:outputText value="Курс" />
+					</f:facet>
+					<h:outputText value="#{result.user.studyPlace.course}" />
+				</p:column>
+
+				<p:column sortBy="user.studyPlace.studyGroup"
+					filterBy="user.studyPlace.studyGroup" id="studyGroup">
+					<f:facet name="header">
+						<h:outputText value="Группа" />
+					</f:facet>
+					<h:outputText value="#{result.user.studyPlace.studyGroup}" />
+				</p:column>
+
+				<p:column sortBy="test.subject"
+					filterBy="test.subject" id="subject">
+					<f:facet name="header">
+						<h:outputText value="Дисциплина" />
+					</f:facet>
+					<h:outputText value="#{result.test.subject}" />
+				</p:column>
+
+				<p:column  sortBy="test.topic"
+					filterBy="test.topic" id="topic">
+					<f:facet name="header">
+						<h:outputText value="Тема" />
+					</f:facet>
+					<h:outputText value="#{result.test.topic}" />
+				</p:column>
+
+				<p:column 
+					sortBy="test.testSettings.countOfTries"
+					filterBy="test.testSettings.countOfTries" id="countOfAttempts">
+					<f:facet name="header">
+						<h:outputText value="Попытки" />
+					</f:facet>
+					<h:outputText value="#{result.countOfAttempts}" />
+				</p:column>
+
+				<p:column sortBy="bestResult"
+					filterBy="bestResult" id="bestResult">
+					<f:facet name="header">
+						<h:outputText value="Лучший результат %" />
+					</f:facet>
+					<h:outputText value="#{result.bestResult}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Экспорт в Excel" ajax="false"
+						icon="ui-icon-disk"
+						title="Выделите результаты тех студентов, информацию о которых нужно експортировать">
+						<p:dataExporter  type="xls"
+							target=":form:dataTable" fileName="results" selectionOnly="true"/>
+					</p:commandButton>
+					<p:commandButton value="Печать" icon="ui-icon-print" ajax="false">
+						<p:printer target=":form:dataTable"></p:printer>
+					</p:commandButton>
+					<br />
+					<p />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+	<ui:define name="east">
+		<h:form>
+			<h:panelGrid columns="2">
+
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

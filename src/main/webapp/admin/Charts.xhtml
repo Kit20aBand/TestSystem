@@ -1,0 +1,22 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="content">
+	<p:panel footer="d">
+	<f:facet name="header">  
+        Результаты студентов  
+    </f:facet>
+		<p:lineChart id="linear" value="#{showChartsController.linearModel}"
+			legendPosition="e" zoom="true" animate="true" minY="0"
+			maxY="100" style="height:420px" widgetVar="chart" />
+
+		<p:commandButton type="button" value="Сбросить" icon="ui-icon-cancel"
+			onclick="PF('chart').resetZoom()" />
+	</p:panel>
+	</ui:define>
+
+</ui:composition>

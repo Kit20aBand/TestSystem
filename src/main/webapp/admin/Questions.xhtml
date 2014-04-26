@@ -1,0 +1,130 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="title">Вопросы</ui:define>
+	<ui:define name="content">
+		<h:form id="formad">
+			<p:contextMenu for="allQuestions">
+				<p:menuitem value="Удалить"
+					actionListener="#{allQuestionsController.deleteQuestions}"
+					update="allQuestions, :growl" icon="ui-icon-trash" />
+				<p:menuitem value="Редактировать" update=":growl"
+					icon="ui-icon-pencil"
+					action="#{allQuestionsController.editQuestion}" />
+			</p:contextMenu>
+			<p:dataTable id="allQuestions" var="question" editable="true"
+				rendered="#{allQuestionsController.activeTestSelected}"
+				value="#{allQuestionsController.questionDataModel}" paginator="true"
+				rows="10" rowKey="#{question.id}"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="1,10,15,50"
+				selection="#{allQuestionsController.selectedQuestions}"
+				filteredValue="#{allQuestionsController.filteredQuestions}"
+				resizableColumns="true"
+				emptyMessage="Вы еще не добавили ни одного вопроса.">
+
+				<f:facet name="header">
+						Вопросы к тесту
+					</f:facet>
+
+				<p:column selectionMode="multiple" style="width:4%" />
+
+				<p:column sortBy="question" filterBy="question" id="questionName">
+					<f:facet name="header">
+						<h:outputText value="Вопрос" />
+					</f:facet>
+					<h:outputText value="#{question.question}" escape="false" />
+
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Новый вопрос" icon="ui-icon-star"
+						action="#{allQuestionsController.doNewQuestion}" />
+					<p:commandButton value="Редактировать вопрос" update=":growl"
+						icon="ui-icon-pencil"
+						action="#{allQuestionsController.editQuestion}" />
+
+					<p:commandButton value="Удалить вопросы"
+						actionListener="#{allQuestionsController.deleteQuestions}"
+						update="allQuestions, :growl" icon="ui-icon-trash"
+						title="Выделите вопросы для удаления">
+						<p:confirm header="Подтвердите удаление" message="Вы уверены?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+
+					<p:commandButton value="Настройки"
+						oncomplete="settingsDialog.show()" update="allQuestions, :growl"
+						icon="ui-icon-settings">
+					</p:commandButton>
+					<br />
+					<p />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+		<p:dialog header="Настройки" widgetVar="settingsDialog"
+			resizable="false" id="settingsDlg" closable="false">
+			<h:form id="settingsForm">
+				<p:panelGrid id="seetingsGrid" columns="2" cellpadding="4"
+					style="margin:0 auto;">
+					<h:outputText value="Перемешивать порядок вопросов? :"></h:outputText>
+					<p:selectBooleanButton onLabel="Да" offLabel="Нет"
+						value="#{questionsSettingsController.activeTest.testSettings.shuffleQuestions}">
+					</p:selectBooleanButton>
+
+					<h:outputText value="Показывать кол-во правильных ответов? :"></h:outputText>
+					<p:selectBooleanButton onLabel="Да" offLabel="Нет"
+						value="#{questionsSettingsController.activeTest.testSettings.showCountOfCorrectAnswers}">
+					</p:selectBooleanButton>
+					
+					<h:outputText value="Делать проверку на пустые ответы? :"></h:outputText>
+					<p:selectBooleanButton onLabel="Да" offLabel="Нет"
+						value="#{questionsSettingsController.activeTest.testSettings.checkAllAnswers}">
+					</p:selectBooleanButton>
+					
+					<h:outputText value="Кол-во вопросов в тесте? :" title="Вопросы выбираются случайным образом"></h:outputText>
+					<p:selectOneMenu  value="#{questionsSettingsController.activeTest.testSettings.countOfQuestionsInTest}">
+					<f:selectItems value="#{allQuestionsController.questionsCountList}"/>
+					</p:selectOneMenu>
+					
+					<f:facet name="footer">
+						<p:commandButton value="Сохранить" update=":growl"
+							oncomplete=" handleSubmitRequest(xhr, status, args, 'settingsDlg','settingsForm');"
+							actionListener="#{questionsSettingsController.saveTestSettings()}" />
+					</f:facet>
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:growl id="growl" showDetail="true" />
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="explode"
+			closeOnEscape="true" >
+			<div align="center">
+				<p:commandButton value="Да" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Нет" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</div>
+		</p:confirmDialog>
+
+		<script type="text/javascript">  
+    function handleSubmitRequest(xhr, status, args, dialogName, formName) {  
+            dialog = jQuery('#'+dialogName);
+        if(args.validationFailed) {  
+            dialog.effect("shake", { times:3 }, 100);  
+        } else {
+            clearForm(formName);
+            settingsDialog.hide(); 
+   
+        }  
+    }
+    function clearForm(formName){
+        jQuery('#'+formName).each(function(){
+	        this.reset();
+	});
+    }
+</script>
+	</ui:define>
+</ui:composition>

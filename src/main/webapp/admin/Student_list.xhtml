@@ -1,0 +1,290 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="title">Студенты</ui:define>
+	<ui:define name="content">
+		<h:form id="form">
+			<p:contextMenu for="dataTable">
+				<p:menuitem value="Удалить студентов"
+					actionListener="#{userController.doDeleteUsers}" update="dataTable"
+					icon="ui-icon-trash" />
+				<p:menuitem value="Уведомить о тесте" icon="ui-icon-mail-closed"
+					update=":growl" actionListener="#{userController.sendEmail}" />
+				<p:menuitem value="Экспорт в Excel" ajax="false" icon="ui-icon-disk"
+					id="contextMenuExport">
+					<pe:exporter type="xlsx" target=":form:dataTable"
+						selectionOnly="true" fileName="students" />
+				</p:menuitem>
+			</p:contextMenu>
+			<p:dataTable id="dataTable" var="user" editable="true"
+				value="#{userController.userDataModel}" paginator="true" rows="10"
+				styleClass="userDataTableStyle"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="1,10,15,50"
+				selection="#{userController.selectedUsers}"
+				filteredValue="#{userController.filteredUsers}"
+				resizableColumns="true"
+				emptyMessage="Вы еще не добавили ни одного студента.">
+
+				<f:facet name="header">  
+            		Студенты 
+        		</f:facet>
+
+				<p:ajax event="rowEdit" listener="#{userController.onEdit}"
+					update=":growl" />
+				<p:ajax event="rowEditCancel" listener="#{userController.onCancel}"
+					update=":growl" />
+
+
+				<p:column selectionMode="multiple" style="width:4%" />
+
+
+				<p:column sortBy="username" filterBy="username" id="username">
+					<f:facet name="header">
+						<h:outputText value="Ник" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.username}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.username}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="password" filterBy="password" id="password">
+					<f:facet name="header">
+						<h:outputText value="Пароль" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.password}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.password}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="lastname" filterBy="lastname" id="lastname">
+					<f:facet name="header">
+						<h:outputText value="Фамилия" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.lastname}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.lastname}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="firstname" filterBy="firstname" id="firstname">
+					<f:facet name="header">
+						<h:outputText value="Имя" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.firstname}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.firstname}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Email" sortBy="email" filterBy="email"
+					id="email">
+					<f:facet name="header">
+						<h:outputText value="Email" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.email}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.email}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="studyPlace.educationInstitution"
+					filterBy="studyPlace.educationInstitution"
+					id="educationInstitution">
+					<f:facet name="header">
+						<h:outputText value="ВУЗ" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.studyPlace.educationInstitution}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.studyPlace.educationInstitution}"
+								style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="studyPlace.course" filterBy="studyPlace.course"
+					id="course">
+					<f:facet name="header">
+						<h:outputText value="Курс" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.studyPlace.course}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.studyPlace.course}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="studyPlace.studyGroup"
+					filterBy="studyPlace.studyGroup" id="studyGroup">
+					<f:facet name="header">
+						<h:outputText value="Группа" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.studyPlace.studyGroup}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.studyPlace.studyGroup}"
+								style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column style="width:6%" exportable="false">
+					<f:facet name="header">
+						<h:outputText value="Измeн." />
+					</f:facet>
+					<p:rowEditor />
+				</p:column>
+
+				<f:facet name="footer">
+
+					<p:commandButton value="Добавить студента"
+						oncomplete="newUserDialog.show()" icon="ui-icon-star"
+						title="Добавить нового студента" />
+					<p:commandButton value="Удалить студентов"
+						actionListener="#{userController.doDeleteUsers}"
+						update="dataTable, :growl" icon="ui-icon-trash"
+						title="Выделите тех студентов, информацию о которых нужно удалить">
+						<p:confirm header="Подтвердите удаление"
+							message="Вы уверены? Записи о  результатах этого студента также будут удалены."
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton value="Уведомить о тесте"
+						icon="ui-icon-mail-closed" update=":growl"
+						title="Выделите студентов, которым будет отправлена информация по почте о входе в систему и о тесте"
+						actionListener="#{userController.sendEmail}">
+					</p:commandButton>
+
+					<p:commandButton value="Печать" icon="ui-icon-print">
+						<p:printer target="dataTable"></p:printer>
+					</p:commandButton>
+
+					<p:commandButton value="Экспорт в Excel" id="excButton"
+						icon="ui-icon-disk" ajax="false"
+						title="Выделите тех студентов, информацию о которых нужно експортировать">
+						<pe:exporter type="xlsx" target=":form:dataTable"
+							selectionOnly="true" fileName="students" />
+					</p:commandButton>
+					<br />
+					<p />
+				</f:facet>
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog header="Добавить студента" widgetVar="newUserDialog"
+			resizable="false" id="newUserDlg">
+			<h:form id="newUserForm">
+				<p:panelGrid id="displayNewUser" columns="2" cellpadding="4"
+					style="margin:0 auto;">
+					<h:outputText value="Ник* :"></h:outputText>
+					<p:inputText value="#{userController.newUser.username}"
+						required="true" requiredMessage="Пожалуйста, введите ник!" />
+
+					<h:outputText value="Пароль* :"></h:outputText>
+					<p:inputText value="#{userController.newUser.password}"
+						required="true" requiredMessage="Пожалуйста, введите пароль!"
+						maxlength="16">
+						<f:converter converterId="com.nz.util.SHAConverter"></f:converter>
+					</p:inputText>
+
+					<h:outputText value="Фамилия* :"></h:outputText>
+					<p:inputText value="#{userController.newUser.lastname}"
+						required="true" requiredMessage="Пожалуйста, введите фамилию!" />
+
+					<h:outputText value="Имя* :"></h:outputText>
+					<p:inputText value="#{userController.newUser.firstname}"
+						required="true" requiredMessage="Пожалуйста, введите имя!" />
+
+					<h:outputText value="Email* :"></h:outputText>
+					<p:inputText value="#{userController.newUser.email}"
+						required="true" requiredMessage="Пожалуйста, введите email!" />
+					<h:outputText value="ВУЗ :"></h:outputText>
+					<p:inputText
+						value="#{userController.newUser.studyPlace.educationInstitution}" />
+
+					<h:outputText value="Курс :"></h:outputText>
+					<p:inputText value="#{userController.newUser.studyPlace.course}">
+					</p:inputText>
+
+					<h:outputText value="Группа :"></h:outputText>
+					<p:inputText
+						value="#{userController.newUser.studyPlace.studyGroup}" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Добавить" update=":form:dataTable, :growl, :studentsCount"
+							oncomplete=" handleSubmitRequest(xhr, status, args, 'newUserDlg','newUserForm');"
+							actionListener="#{userController.doCreateUser}" />
+						<p:commandButton type="reset" value="Очистить"></p:commandButton>
+					</f:facet>
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:growl id="growl" showDetail="true" />
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="explode"
+			closeOnEscape="true">
+			<div align="center">
+				<p:commandButton value="Да" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Нет" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</div>
+		</p:confirmDialog>
+
+		<script type="text/javascript">  
+    function handleSubmitRequest(xhr, status, args, dialogName, formName) {  
+            dialog = jQuery('#'+dialogName);
+        if(args.validationFailed) {  
+            dialog.effect("shake", { times:3 }, 100);  
+        } else {
+            clearForm(formName);
+            newUserDialog.hide(); 
+   
+        }  
+    }
+    function clearForm(formName){
+        jQuery('#'+formName).each(function(){
+	        this.reset();
+	});
+    }
+</script>
+	</ui:define>
+	<ui:define name="east">
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,115 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="title">Главная</ui:define>
+	<ui:define name="content">
+		<p:notificationBar position="top" effect="slide" widgetVar="testBar"
+		rendered="#{checkConditionsForTestController.checkPassTest}"
+			style="height: 470px" styleClass="top">
+			<p:panel header="Информация о тесте">
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Преподаватель: {0}. ">
+					<f:param
+						value="#{checkConditionsForTestController.activeTest.teacherName}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Дисциплина: {0}.">
+					<f:param value="#{checkConditionsForTestController.activeTest.subject}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Тема: {0}.">
+					<f:param value="#{checkConditionsForTestController.activeTest.topic}"></f:param>
+				</h:outputFormat>
+			</p:panel>
+			<br />
+			<p:panel header="Условия прохождения теста">
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Количество возможных попыток: {0}.">
+					<f:param
+						value="#{checkConditionsForTestController.activeTest.testSettings.countOfTries}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Время на прохождение(мин): {0}.">
+					<f:param
+						value="#{checkConditionsForTestController.activeTest.testSettings.countOfMinutes}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Начало прохождения: {0}." rendered="#{checkConditionsForTestController.activeTest.testSettings.startDate != null}">
+					<f:param
+						value="#{checkConditionsForTestController.activeTest.testSettings.startDate}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;" rendered="#{checkConditionsForTestController.activeTest.testSettings.finishDate != null}"
+					value="Конец прохождения: {0}.">
+					<f:param
+						value="#{checkConditionsForTestController.activeTest.testSettings.finishDate}"></f:param>
+				</h:outputFormat>
+			</p:panel>
+			<br />
+			<p:panel header="Ваш результат">
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Вы использовали попыток: {0}.">
+					<f:param
+						value="#{checkConditionsForTestController.currentUsersResult.countOfAttempts}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Ваш лучший результат(%): {0}">
+					<f:param
+						value="#{checkConditionsForTestController.currentUsersResult.bestResult}"></f:param>
+				</h:outputFormat>
+			</p:panel>
+			<br />
+			<h:form>
+				<div align="center">
+					<p:commandButton value="Начать прохождение" action="Run_test?faces-redirect=true" />
+					<p:commandButton value="Отмена" onclick="PF('testBar').hide()" />
+				</div>
+			</h:form>
+		</p:notificationBar>
+
+		<p:notificationBar position="top" effect="slide" widgetVar="testBar"
+			rendered="#{!checkConditionsForTestController.activeTest.testSettings.testMode}"
+			style="height: 205px" styleClass="top">
+			<div align="center">
+			<h:outputFormat style="color:#FFCC00;font-size:36px;"
+				value="Обучающий режим" />
+			</div>
+			<p:panel header="Информация о тесте">
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Преподаватель: {0}. ">
+					<f:param
+						value="#{checkConditionsForTestController.activeTest.teacherName}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Дисциплина: {0}.">
+					<f:param value="#{checkConditionsForTestController.activeTest.subject}"></f:param>
+				</h:outputFormat>
+				<br />
+				<h:outputFormat style="color:#FFCC00;font-size:24px;"
+					value="Тема: {0}.">
+					<f:param value="#{checkConditionsForTestController.activeTest.topic}"></f:param>
+				</h:outputFormat>
+			</p:panel>
+			<h:form>
+				<div align="center">
+					<p:commandButton value="Начать прохождение" action="Run_test?faces-redirect=true"/>
+					<p:commandButton value="Отмена" onclick="PF('testBar').hide()"/>
+				</div>
+			</h:form>
+		</p:notificationBar>
+		<h:form>
+			<p:commandButton styleClass="admin-dashboard-button" rendered="#{checkConditionsForTestController.checkActiveTest()}"
+				value="#{msgs.Run_test}" onclick="PF('testBar').show()" update=":growl"/>
+		</h:form>
+<p:growl id="growl" showDetail="true" />
+	</ui:define>
+</ui:composition>

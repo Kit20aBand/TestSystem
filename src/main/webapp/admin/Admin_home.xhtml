@@ -1,0 +1,64 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="title">Главная</ui:define>
+	<ui:define name="content">
+		<p:dialog modal="true" widgetVar="statusDialog"
+			header="Пожалуйста, подождите..." draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage value="/images/util//ajaxloadingbar.gif" />
+		</p:dialog>
+		<h:form>
+			<p:dashboard id="board" model="#{dashboardController.model}"
+				style="margin:auto;width:60%">
+				<p:panel id="Students">
+					<p:commandButton styleClass="admin-dashboard-button"
+						onclick="PrimeFaces.monitorDownload(start, stop)"
+						value="#{msgs.Students}"
+						action="/admin/Student_list.xhtml?faces-redirect=true"
+						ajax="false" />
+				</p:panel>
+				<p:panel id="Tests">
+					<p:commandButton styleClass="admin-dashboard-button"
+						onclick="PrimeFaces.monitorDownload(start, stop)"
+						value="#{msgs.Tests}"
+						action="/admin/Test_list.xhtml?faces-redirect=true" ajax="false" />
+				</p:panel>
+				<p:panel id="Questions">
+					<p:commandButton styleClass="admin-dashboard-button"
+						onclick="PrimeFaces.monitorDownload(start, stop)"
+						value="#{msgs.Questions}"
+						action="/admin/Questions.xhtml?faces-redirect=true" ajax="false" />
+				</p:panel>
+
+				<p:panel id="Results">
+					<p:commandButton styleClass="admin-dashboard-button"
+						onclick="PrimeFaces.monitorDownload(start, stop)"
+						value="#{msgs.Results}"
+						action="/admin/Results.xhtml?faces-redirect=true" ajax="false" />
+				</p:panel>
+				<p:panel id="TestSettings">
+					<p:commandButton styleClass="admin-dashboard-button"
+						onclick="PrimeFaces.monitorDownload(start, stop)"
+						value="#{msgs.TestSettings}"
+						action="/admin/TestSettings.xhtml?faces-redirect=true"
+						ajax="false" />
+				</p:panel>
+			</p:dashboard>
+		</h:form>
+		<script type="text/javascript">  
+			function start() {  
+    			PF('statusDialog').show();  
+			}  
+  
+			function stop() {  
+    			PF('statusDialog').hide();  
+			}
+		</script>
+	</ui:define>
+</ui:composition>
+

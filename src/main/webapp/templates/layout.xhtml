@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<link rel="icon" href="#{request.contextPath}/images/favicon.ico" type="image/x-icon"/>
+<link rel="shortcut icon" href="#{request.contextPath}/images/favicon.ico" type="image/x-icon"/>
+	<title><ui:insert name="title">Login</ui:insert></title>
+	<h:outputStylesheet library="css" name="default.css" />
+
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" size="91" header="Voltage Test System"
+			resizable="false" effect="slide" collapsible="true">
+			<ui:insert name="north" >
+				<div align="right" >
+					<h:outputFormat id="teachersCount" style="font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 8pt;" value="Общее количество преподавателей: {0}">
+						<f:param value="#{additionalContentController.countOfTeachers}"></f:param>
+					</h:outputFormat>
+					<br />
+					<h:outputFormat id="studentsCount" style="font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 8pt;" value="Общее количество студентов: {0}">
+						<f:param value="#{additionalContentController.countOfStudents}"></f:param>
+					</h:outputFormat>
+					<br />
+					<h:outputFormat id="questionsCount" style="font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 8pt; margin-right:3px;" value="Общее количество вопросов: {0}">
+						<f:param value="#{additionalContentController.countOfQuestions}"></f:param>
+					</h:outputFormat>
+				</div>
+
+
+			</ui:insert>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="south" size="70" header="Авторские права"
+			resizable="true" closable="true" collapsible="true">
+			<ui:insert name="south">
+				
+			</ui:insert>
+		</p:layoutUnit>
+
+		<p:layoutUnit id="westUnit" position="west" size="200" header="Меню"
+			resizable="false" closable="false" collapsible="false">
+			<ui:include src="../templates/tiles/LeftMenu.xhtml" />
+		</p:layoutUnit>
+
+
+
+		<p:layoutUnit position="center">
+			<ui:insert name="content">Put default content here, if any.</ui:insert>
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+</html>

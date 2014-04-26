@@ -1,0 +1,101 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="title">Прохождение теста</ui:define>
+	<ui:define name="north">
+		
+	</ui:define>
+	<ui:define name="content">
+		<p:dialog modal="true" widgetVar="statusDialog"
+			header="Пожалуйста, подождите..." draggable="false" closable="false"
+			resizable="false">
+			<p:graphicImage value="/images/util//ajaxloadingbar.gif" />
+		</p:dialog>
+		<p:notificationBar rendered="true" position="top" effect="slide"
+			widgetVar="bar" styleClass="top">
+			<h:outputText
+				value="What PrimeFaces has so far is just the beginning!"
+				style="color:#FFCC00;font-size:36px;" />
+		</p:notificationBar>
+
+		<h:form id="form">
+			<p:dataList id="dataTable" lazy="true" rowIndexVar="index"
+				value="#{runTestController.questions}" var="question"
+				paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="1,5,10,15,50">
+				<f:facet name="header">  
+                		Вопросы
+           			</f:facet>
+				<div>
+					<h:outputLabel value="#{index + 1}."
+						style="font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 11pt;" />
+					<h:outputLabel value="#{question.question}" escape="false"
+						style="font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 11pt; text-align: left" />
+
+					<h:outputFormat style="margin-left:15px;"
+						rendered="#{runTestController.activeTest.testSettings.showCountOfCorrectAnswers}"
+						value="Правильных ответов: {0}">
+						<f:param value="#{runTestController.countOfAnswers}"></f:param>
+					</h:outputFormat>
+				</div>
+
+
+
+				<p:selectManyCheckbox
+					style="position: relative; bottom: -0.5em; font-family: Verdana, Arial, Helvetica, sans-serif;"
+					value="#{submitController.userAnswersToCurrentQuestion}"
+					layout="pageDirection">
+					<f:selectItems value="#{question.variants}" />
+				</p:selectManyCheckbox>
+
+				<p:separator id="separator"
+					style="position: relative; bottom: -0.5em;" />
+				<br />
+				<f:facet name="footer">
+
+					<p:commandButton value="Отправить результат" 
+					
+						action="#{submitController.checkUserAnswers}"
+						update=":form:messages">
+						<p:confirm header="Подтверждение" message="Вы уверены?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</f:facet>
+			</p:dataList>
+
+			<p:growl id="messages" showDetail="true" />
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+				<p:commandButton value="Да" type="button"
+				
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Нет" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:dialog id="testDialog" widgetVar="testDialog2"
+				onShow="PF('bui').show()" header="Время закончилось"
+				closable="false" showEffect="fade" hideEffect="explode">
+				<h:form>
+					<h:outputText value="Время на прохождение теста истекло" />
+					<br />
+					<div align="center">
+						<p:commandButton value="Отправить результат"
+							action="#{submitController.checkUserAnswers}"
+							update=":form:messages"
+							>
+						</p:commandButton>
+					</div>
+				</h:form>
+			</p:dialog>
+			<p:blockUI block="dataTable" widgetVar="bui" />
+		</h:form>
+
+	</ui:define>
+</ui:composition>

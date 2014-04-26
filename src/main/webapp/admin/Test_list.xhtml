@@ -1,0 +1,270 @@
+<ui:composition template="/templates/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="title">Тесты</ui:define>
+	<ui:define name="content">
+		<h:form id="form">
+			<p:contextMenu for="allTests">
+				<p:menuitem value="Удалить тесты"
+					actionListener="#{allTestsController.deleteTests}"
+					update="allTests" icon="ui-icon-trash" />
+
+				<p:menuitem value="Экспорт в Excel" ajax="false" icon="ui-icon-disk"
+					id="contextMenuExport">
+					<pe:exporter type="xlsx" target=":form:allTests"
+						selectionOnly="true" fileName="tets" />
+				</p:menuitem>
+			</p:contextMenu>
+			<p:dataTable id="allTests" var="test" editable="true"
+				resizableColumns="true" value="#{allTestsController.testDataModel}"
+				paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,15,50"
+				selection="#{allTestsController.selectedTests}"
+				filteredValue="#{allTestsController.filteredTests}"
+				emptyMessage="Вы еще не добавили ни одного теста.">
+
+				<f:event listener="#{allTestsController.validator.validate}"
+					type="postValidate" />
+
+				<f:facet name="header">
+					Доступные тесты
+				</f:facet>
+				<p:ajax event="rowEdit" listener="#{allTestsController.onEdit}"
+					update=":growl, activeTest" />
+				<p:ajax event="rowEditCancel"
+					listener="#{allTestsController.onCancel}" update=":growl" />
+
+				<p:column selectionMode="multiple" style="width:4%" />
+
+				<p:column sortBy="subject" filterBy="subject" id="subject">
+					<f:facet name="header">
+						<h:outputText value="Дисциплина" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{test.subject}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{test.subject}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="topic" filterBy="topic" id="topic">
+					<f:facet name="header">
+						<h:outputText value="Тема" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{test.topic}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{test.topic}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="testSettings.testMode"
+					filterBy="testSettings.testMode" id="testMode">
+					<f:facet name="header">
+						<h:outputText value="Режим тестирования" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="Тестирование"
+								rendered="#{test.testSettings.testMode}" />
+							<h:outputText value="Обучающий режим"
+								rendered="#{!test.testSettings.testMode}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:selectOneMenu value="#{test.testSettings.testMode}"
+								style="width: 100%">
+								<f:selectItem itemLabel="Обучающий режим" itemValue="false" />
+								<f:selectItem itemLabel="Тестирование" itemValue="true" />
+							</p:selectOneMenu>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+  
+				<p:column sortBy="testSettings.countOfTries"
+					filterBy="testSettings.countOfTries" id="countOfTries">
+					<f:facet name="header">
+						<h:outputText value="Кол-во попыток" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{test.testSettings.countOfTries}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{test.testSettings.countOfTries}"
+								style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="testSettings.startDate"
+					filterBy="testSettings.startDate" id="startDate">
+					<f:facet name="header">
+						<h:outputText value="Дата начала прохождения" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{test.testSettings.startDate}">
+								<f:convertDateTime pattern="d/M/yyyy" />
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:calendar value="#{test.testSettings.startDate}"
+								style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column sortBy="testSettings.finishDate"
+					filterBy="testSettings.finishDate" id="finishDate">
+					<f:facet name="header">
+						<h:outputText value="Дата окончания прохождения" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{test.testSettings.finishDate}">
+								<f:convertDateTime pattern="d/M/yyyy" />
+							</h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:calendar value="#{test.testSettings.finishDate}"
+								style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column style="width:6%">
+					<f:facet name="header">
+						<h:outputText value="Измен." />
+					</f:facet>
+					<p:rowEditor />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Новый тест"
+						oncomplete="newTestDialog.show()" icon="ui-icon-star"
+						title="Создать новый тест. Органичения на кол-во попыток, время прохождения и дату доступны только в тестовом режиме." />
+					<p:commandButton value="Удалить тесты"
+						actionListener="#{allTestsController.deleteTests}"
+						update="allTests" icon="ui-icon-trash"
+						title="Выделите тесты для удаления">
+						<p:confirm header="Подтвердите удаление" message="Вы уверены?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton value="Сделать тест активным"
+						title="Выбранный тест становится доступным для добавления(удаления) вопросов и прохождения студентами."
+						actionListener="#{allTestsController.chooseTest}"
+						update=":growl, activeTest" icon="ui-icon-carat-1-n" />
+					<p:commandButton value="Сбросить активный тест"
+						title="Тестирование студентов становится невозможным. Добавление(удаление) вопросов невозможно."
+						actionListener="#{allTestsController.resetActiveTest}"
+						update=":growl, activeTest" icon="ui-icon-arrow-1-s" />
+					<p:commandButton value="Экспорт в Excel" id="excButton"
+						icon="ui-icon-disk" ajax="false"
+						title="Выделите те тесты, информацию о которых нужно експортировать">
+						<pe:exporter type="xlsx" target=":form:allTests"
+							selectionOnly="true" fileName="tests" />
+					</p:commandButton>
+					<div align="right">
+						<h:outputFormat id="activeTest" value="Активный тест: {0}"
+							style="font-size: 14px;  color: #818181;">
+							<f:param value="#{allTestsController.findActiveTest()}"></f:param>
+						</h:outputFormat>
+					</div>
+
+					<p />
+
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog header="Добавить тест" widgetVar="newTestDialog"
+			resizable="false" id="newTestDlg">
+			<h:form id="newTestForm">
+				<p:panelGrid id="displayNewTest" columns="2" cellpadding="4"
+					style="margin:0 auto;">
+					<h:outputText value="Дисциплина* :"></h:outputText>
+					<p:inputText value="#{allTestsController.newTest.subject}"
+						required="true" requiredMessage="Пожалуйста, введите дисциплину!" />
+
+					<h:outputText value="Тема* :"></h:outputText>
+					<p:inputText value="#{allTestsController.newTest.topic}"
+						required="true" requiredMessage="Пожалуйста, введите тему теста!" />
+
+					<h:outputText value="Режим прохождения теста* :"></h:outputText>
+					<p:selectOneMenu style="width: 100%" id="mode"
+						value="#{allTestsController.testSettings.testMode}">
+						<f:selectItem itemLabel="Обучающий режим" itemValue="false" />
+						<f:selectItem itemLabel="Тестирование" itemValue="true" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Кол-во минут на прохождение :"></h:outputText>
+					<p:inputText
+						value="#{allTestsController.testSettings.countOfMinutes}">
+						
+					</p:inputText>
+
+
+					<h:outputText value="Кол-во попыток на прохождение :"></h:outputText>
+					<p:inputText  
+						value="#{allTestsController.testSettings.countOfTries}">
+					</p:inputText>
+
+					<h:outputText value="Дата начала прохождения"></h:outputText>
+					<p:calendar value="#{allTestsController.testSettings.startDate}"
+						id="popupCalStart" />
+
+					<h:outputText value="Дата окончания прохождения"></h:outputText>
+					<p:calendar value="#{allTestsController.testSettings.finishDate}"
+						id="popupCalFinish" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Добавить" update=":form:allTests, :growl"
+							oncomplete=" handleSubmitRequest(xhr, status, args, 'newTestDlg','newTestForm');"
+							actionListener="#{allTestsController.addTest}" />
+						<p:commandButton type="reset" value="Очистить"></p:commandButton>
+					</f:facet>
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:growl id="growl" showDetail="true" life="5000" />
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="explode"
+			closeOnEscape="true">
+			<div align="center">
+				<p:commandButton value="Да" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Нет" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</div>
+		</p:confirmDialog>
+		<script type="text/javascript">  
+    function handleSubmitRequest(xhr, status, args, dialogName, formName) {  
+            dialog = jQuery('#'+dialogName);
+        if(args.validationFailed) {  
+            dialog.effect("shake", { times:3 }, 100);  
+        } else {
+            clearForm(formName);
+            newTestDialog.hide(); 
+   
+        }  
+    }
+    function clearForm(formName){
+        jQuery('#'+formName).each(function(){
+	        this.reset();
+	});
+    }
+</script>
+	</ui:define>
+</ui:composition>
